@@ -4,13 +4,10 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-<<<<<<< HEAD
 lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-=======
->>>>>>> first commit
 
 # Runtime data
 pids
@@ -23,10 +20,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
-<<<<<<< HEAD
 *.lcov
-=======
->>>>>>> first commit
 
 # nyc test coverage
 .nyc_output
