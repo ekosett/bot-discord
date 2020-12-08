@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Discord = require('discord.js');
 const TelegramBot = require('node-telegram-bot-api')
+const cron = require('cron').CronJob;
 
 var bot = new Discord.Client();
 let token = process.env.CLIENT_TOKEN
@@ -20,24 +21,22 @@ const BadWordsList = [
   'kontol',
   'asu' ]
 
-//   console.log(BadWords(BadWordsList, "bot baik"));
-//   let messageBadwords = BadWords(BadWordsList, 'memek');
-//   console.log(messageBadwords)
-//   if(messageBadwords.length > 0){
-//      console.log(messageBadwords)
-//    }
 const idOrang = [ 
     '502768280419827712',
     '583687894112272386',
     '521585525228961793',
     '637537459206488075',
-    '516287066598932496'
+    '516287066598932496',
+    '480223411352764416'
 ]
 
 bot.once('ready', function() {
     console.clear();
     console.log('Logged in as %s\n', bot.user.username);
-    
+
+    taskCron("* 20 * * *", async function () { // cron time job asterix (menit, jam, day(month), bulan, day(week))
+        bot.channels.cache.get('481721469714563074').send("!ready") // channel mabar pubg
+    })
 });
 
 bot.on('message', async(msg) => {
@@ -48,48 +47,21 @@ bot.on('message', async(msg) => {
         msg.reply(messageBadwords)
     }else if (msg.content === 'ping'){
         msg.reply('siap bos !');
-    }else if (msg.content === '!join'){
-        console.log(msg.member.user.id)
-        console.log(msg.member.user.username)
-        if (msg.member.voice.channel) {
-            const connection = await msg.member.voice.channel.join();
-        }
-    }else if (msg.content === '!leave'){
-        const connection = await msg.member.voice.channel.leave();
     }else if (msg.content === '!ready'){
-        msg.channel.send(`Yok <@502768280419827712> <@583687894112272386> <@521585525228961793> <@637537459206488075> <@516287066598932496>`)
-        // const channel = bot.channels.cache.get('761069146737737763')
-        // console.log("START DARI SNI")
-        // const cans = bot.channels.cache.get('481721469714563074');
-        // console.log(cans.members)
-        // msg.channel.members.each(user => console.log(user))
-        // console.log(bot.guilds.cache.get('481721469714563072').members.cache)
-        // console.log(msg.member.user)
-        // channel.send();
+        let message = 'Yok '
+        let broadcastedUser = idOrang.filter(id => id != msg.author.id)
+        broadcastedUser.forEach(userId => {
+            message += `<@${userId}> `
+        });
+        msg.channel.send(message)
+        // msg.channel.send(`Yok <@502768280419827712> <@583687894112272386> <@521585525228961793> <@637537459206488075> <@516287066598932496>`)
+    }else if (msg.content === "!lama"){
+        msg.channel.send("Sabar cuk")
+    }else if (msg.content === "!list-command"){
+        let text = `List Command\n!ping = Test Bot Online Apa Gk\n!ready = Ngajak Maen`
+        msg.channel.send(text);
     }
   });
-
-bot.on('guildMemberAdd', member => {
-    // Send the message to a designated channel on a server:
-    const channel = member.guild.channels.cache.find(ch => ch.name === 'member-log');
-    // Do nothing if the channel wasn't found on this server
-    if (!channel) return;
-    // Send the message, mentioning the member
-    channel.send(`Welcome to the server, ${member}`);
-});
-
-
-
-bot.on('messageReactionAdd', async(reaction, user) => {
-    let msg = reaction.message,
-      emoji = reaction.emoji;
-    const person = user.id;
-    console.log(person)
-    // if (emoji.name == '🍉' && user.id != "711388151960043582") {
-    //   message.channel.send("HI")
-    //   user.id.voice.setChannel("712142435794550894");
-    // }
-});
 
 bot.login(token);
 
@@ -123,3 +95,12 @@ bot_telegram.on('message', (msg) => {
     if(msg.text == "/my_chat_id") bot_telegram.sendMessage(chatId, `Chat id ${userName} : ${userChatId}`);
     
   });
+
+
+function taskCron(date, task) {
+    const job = new cron(date, function () {
+        task();
+    });
+    job.start();
+    return job;
+}

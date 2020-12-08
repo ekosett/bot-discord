@@ -7,6 +7,7 @@
   "description": "",
   "main": "bot-server.js",
   "dependencies": {
+    "cron": "^1.8.2",
     "discord.io": "^2.5.3",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
