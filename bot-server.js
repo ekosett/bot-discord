@@ -34,7 +34,7 @@ bot.once('ready', function() {
     console.clear();
     console.log('Logged in as %s\n', bot.user.username);
 
-    taskCron("* 20 * * *", async function () { // cron time job asterix (menit, jam, day(month), bulan, day(week))
+    taskCron("0 20 * * *", async function () { // cron time job asterix (menit, jam, day(month), bulan, day(week))
         bot.channels.cache.get('481721469714563074').send("!ready") // channel mabar pubg
     })
 });
